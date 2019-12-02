@@ -1,3 +1,5 @@
+from app1.references_manager.exceptions import WrongXmlDataToParse
+
 class xml_handler:
     """Poskytuje funkcie na spracovanie roznych xml vstupov.
     """    
@@ -11,6 +13,8 @@ class xml_handler:
             xml {str} -- retazec s XML na spracovanie
         Returns:
             list[dict{str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu 
+        Raises:
+            WrongXmlDataToParse -- nespravne data pre dane parsovanie
         """ 
         raise NotImplementedError
 
@@ -20,7 +24,9 @@ class xml_handler:
         Arguments:
             xml {str} -- retazec s XML na spracovanie
         Returns:
-            list[dict{str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu 
+            list[dict{str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu
+        Raises:
+            WrongXmlDataToParse -- nespravne data pre dane parsovanie 
         """ 
         raise NotImplementedError
     
@@ -41,6 +47,8 @@ class xml_handler:
             xml {str} -- retazec s XML na spracovanie
         Returns:
            str -- nazov databazy 
+        Raises:
+            WrongXmlDataToParse -- nespravne data pre dane parsovanie
         """
         raise NotImplementedError
     
@@ -51,6 +59,8 @@ class xml_handler:
             xml {str} -- retazec s XML na spracovanie
         Returns:
            str -- nazov zdroju 
+        Raises:
+            WrongXmlDataToParse -- nespravne data pre dane parsovanie
         """
         raise NotImplementedError
     
@@ -61,5 +71,7 @@ class xml_handler:
             xml {str} -- retazec s XML na spracovanie
         Returns:
            str -- nazov publikacie
+        Raises:
+            WrongXmlDataToParse -- nespravne data pre dane parsovanie
         """
         raise NotImplementedError

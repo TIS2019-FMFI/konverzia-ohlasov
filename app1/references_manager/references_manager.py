@@ -1,3 +1,6 @@
+from app1.references_manager.xml_handler.xml_handler import xml_handler
+from app1.references_manager.crepc_connector.crepc_connector import crepc_connector
+
 class references_manager:
     """
     Poskytuje moznosti na ziskanie ohlasov.

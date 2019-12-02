@@ -1,5 +1,7 @@
 from app1.references_manager.crepc_connector import crepc_connector
 from app1.references_manager.xml_handler import xml_handler
+from app1.reference.exceptions import MissingDataException
+from app1.reference.reference import reference
 
 class reference_in_registered_magazine(reference):
     """Odvodena trieda od reference uchovavajuca ohlas

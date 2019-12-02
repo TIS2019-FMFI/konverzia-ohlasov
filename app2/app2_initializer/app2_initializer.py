@@ -1,4 +1,4 @@
-from app2.data_fetcher import data_fetcher
+from app2.data_fetcher.data_fetcher import data_fetcher
 
 class app2_initializer:
     """Zabezpecuje inicializaciu a spustenie app2."""

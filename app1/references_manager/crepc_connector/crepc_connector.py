@@ -1,3 +1,5 @@
+from app1.references_manager.exceptions import CrepConnectionError
+
 class crepc_connector:
     """trieda zabezpecujuca komunikaciu s centralnym
     registrom publikacnej cinnosti
@@ -15,6 +17,8 @@ class crepc_connector:
             to {str} -- datum po ktory sa budu ziskavat ohlasy (default: {""})
         Returns:
             Str -- retazec obsahujuci XML so zoznamom ohlasov
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """        
         raise NotImplementedError
 
@@ -28,6 +32,8 @@ class crepc_connector:
             to {str} -- datum po ktory sa budu ziskavat ohlasy (default: {""})
         Returns:
             Str -- retazec obsahujuci XML so zoznamom ohlasov
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """       
         raise NotImplementedError
     
@@ -38,6 +44,8 @@ class crepc_connector:
             id {str} -- id autora
         Returns:
             Str -- cele meno autora
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """       
         raise NotImplementedError
     
@@ -48,6 +56,8 @@ class crepc_connector:
             id {str} -- id databazy
         Returns:
             Str -- nazov databazy
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """
         raise NotImplementedError
     
@@ -58,6 +68,8 @@ class crepc_connector:
             id {str} -- id zdroja
         Returns:
             Str -- cely nazov zdroja
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """
         raise NotImplementedError
     
@@ -68,6 +80,8 @@ class crepc_connector:
             id {str} -- id publikacie
         Returns:
             Str -- cely nazov publikacie
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
         """
         raise NotImplementedError
     

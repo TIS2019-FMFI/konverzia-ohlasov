@@ -1,5 +1,5 @@
-from app1.references_manager import references_manager
-from app1.progress_logger import progress_logger
+from app1.references_manager.references_manager import references_manager
+from app1.progress_logger.progress_logger import progress_logger
 class app1_initializer:
     """
     Zabezpecuje inicializaciu a spustenie app1.

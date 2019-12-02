@@ -1,4 +1,6 @@
-from app1.reference import reference
+from app1.reference.reference import reference
+from app1.reference.exceptions import MissingDataException
+from app1.references_manager.exceptions import CrepConnectionError, WrongXmlDataToParse
 class progress_logger:
     """
     Trieda zabezpecuje vypisovanie priebehu:

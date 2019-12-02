@@ -1,4 +1,4 @@
-from app1.reference import reference
+from app1.reference.reference import reference
 class file_writer:
     """Stara sa o zapisovanie ohlasov do suboru. 
     """    

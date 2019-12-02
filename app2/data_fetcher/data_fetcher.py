@@ -1,4 +1,4 @@
-from app2.virtua_connector import virtua_connector
+from app2.virtua_connector.virtua_connector import virtua_connector
 
 class data_fetcher:
     """Podava informacie connectoru a vlozi ich do systemu.

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from app1.reference.exceptions import MissingDataException
 class reference(ABC):
     """abstractna trieda uchovavajuca jeden ohlas
     """    
@@ -7,6 +8,8 @@ class reference(ABC):
         """Nastavi si hodnoty z data. Chybajuce hodnoty sa pokusi ziskat.        
         Arguments:
             data {dict{str:str}} -- slovnik hodnot pre vytvorenie ohlasu.(spresnuje odvodena trieda)
+        Raises:
+            MissingDataException - ak ohlas nema vsetky potrbene data a nedaju sa dohladatrekurzivne
         """        
         pass
 
