@@ -1,4 +1,4 @@
-from ..exceptions import exceptions
+from app1.references_manager.exceptions import CrepConnectionError
 import requests
 
 class crepc_connector:
