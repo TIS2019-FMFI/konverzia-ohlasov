@@ -21,13 +21,7 @@ class xml_handler:
         except():
             return WrongXmlDataToParse
 
-    def parse_new_references(self, xml):
-        """ Spracuje novo vzniknute ohlasy Arguments: xml {str} -- retazec s XML na spracovanie Returns: list[dict{
-        str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu Raises: WrongXmlDataToParse
-        -- nespravne data pre dane parsovanie """
-        return self.parse_xml(xml)
-
-    def parse_updated_references(self, xml):
+    def parse_references(self, xml):
         """ Spracuje aktualizovane ohlasy Arguments: xml {str} -- retazec s XML na spracovanie Returns: list[dict{
         str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu Raises: WrongXmlDataToParse
         -- nespravne data pre dane parsovanie """
