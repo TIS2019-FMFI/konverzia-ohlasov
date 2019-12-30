@@ -42,7 +42,7 @@ class xml_handler:
 
     def parse_author(self, xml):
         """ Spracuje xml obsahujuce meno autora Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
-        meno autora """
+        id autora """
         return self.find_in_nested_xml('author', xml)[0]
 
     def parse_database(self, xml):
@@ -52,11 +52,13 @@ class xml_handler:
 
     def parse_source(self, xml):
         """ Spracuje xml obsahujuce zdroj ohlasu Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
-        nazov zdroju Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        return self.find_in_nested_xml(xml, 'source')[0]
+        id zdroju Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
+        res = self.find_in_nested_xml(xml, 'cross_biblio_biblio')
+        return res[0][0]['rec_biblio']['@id']
 
     def parse_full_name(self, xml):
         """ Spracuje xml obsahujuce cely nazov publikacie Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- nazov publikacie Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         res = self.find_in_nested_xml(xml, 'title')[0]
         return " ".join(res['#text'].split())
+
