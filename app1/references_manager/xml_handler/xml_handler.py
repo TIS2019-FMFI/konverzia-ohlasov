@@ -48,15 +48,15 @@ class xml_handler:
     def parse_database(self, xml):
         """ Spracuje xml obsahujuce nazov databazy Arguments: xml {str} -- retazec s XML na spracovanie Returns: str
         -- nazov databazy Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        return self.find_in_nested_xml('database', xml)[0]
+        return self.find_in_nested_xml(xml, 'database_id')[0]
 
     def parse_source(self, xml):
         """ Spracuje xml obsahujuce zdroj ohlasu Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
         nazov zdroju Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        return self.find_in_nested_xml('source', xml)
+        return self.find_in_nested_xml(xml, 'source')[0]
 
     def parse_full_name(self, xml):
         """ Spracuje xml obsahujuce cely nazov publikacie Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- nazov publikacie Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        return self.find_in_nested_xml('full_name', xml)
+        return self.find_in_nested_xml(xml, 'full_name')[0]
 
