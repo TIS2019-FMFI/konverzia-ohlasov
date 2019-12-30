@@ -22,9 +22,10 @@ class xml_handler:
             return WrongXmlDataToParse
 
     def parse_references(self, xml):
-        """ Spracuje aktualizovane ohlasy Arguments: xml {str} -- retazec s XML na spracovanie Returns: list[dict{
-        str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu Raises: WrongXmlDataToParse
-        -- nespravne data pre dane parsovanie """
+        """ Spracuje aktualizovane ohlasy
+        Arguments: xml {str} -- retazec s XML na spracovanie
+        Returns: list[dict{str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu
+        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
 
         begin = xml.find('<oai:record>')
         end = xml.rfind('</oai:record>') + len("</oai:record>")
@@ -41,24 +42,32 @@ class xml_handler:
         return list_of_records
 
     def parse_author(self, xml):
-        """ Spracuje xml obsahujuce meno autora Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
-        id autora """
-        return self.find_in_nested_xml('author', xml)[0]
+        """ Spracuje xml obsahujuce meno autora
+        Arguments: xml {str} -- retazec s XML na spracovanie
+        Returns: str -- id autora
+        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
+        return self.find_in_nested_xml(xml, 'rec_person')[0]['@id']
 
     def parse_database(self, xml):
-        """ Spracuje xml obsahujuce nazov databazy Arguments: xml {str} -- retazec s XML na spracovanie Returns: str
-        -- nazov databazy Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
+        """ Spracuje xml obsahujuce nazov databazy
+        Arguments: xml {str} -- retazec s XML na spracovanie
+        Returns: str -- nazov databazy
+        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         return self.find_in_nested_xml(xml, 'database_id')[0]
 
     def parse_source(self, xml):
-        """ Spracuje xml obsahujuce zdroj ohlasu Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
-        id zdroju Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
+        """ Spracuje xml obsahujuce zdroj ohlasu
+        Arguments: xml {str} -- retazec s XML na spracovanie
+        Returns: str -- id zdroju
+        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         res = self.find_in_nested_xml(xml, 'cross_biblio_biblio')
         return res[0][0]['rec_biblio']['@id']
 
     def parse_full_name(self, xml):
-        """ Spracuje xml obsahujuce cely nazov publikacie Arguments: xml {str} -- retazec s XML na spracovanie
-        Returns: str -- nazov publikacie Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
+        """ Spracuje xml obsahujuce cely nazov publikacie
+        Arguments: xml {str} -- retazec s XML na spracovanie
+        Returns: str -- nazov publikacie
+        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         res = self.find_in_nested_xml(xml, 'title')[0]
         return " ".join(res['#text'].split())
 
