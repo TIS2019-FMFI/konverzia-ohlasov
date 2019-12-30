@@ -25,7 +25,20 @@ class xml_handler:
         """ Spracuje aktualizovane ohlasy Arguments: xml {str} -- retazec s XML na spracovanie Returns: list[dict{
         str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu Raises: WrongXmlDataToParse
         -- nespravne data pre dane parsovanie """
-        return self.parse_xml(xml)
+
+        begin = xml.find('<oai:record>')
+        end = xml.rfind('</oai:record>') + len("</oai:record>")
+
+        records_xml = xml[begin:end]
+        records_xml = records_xml.replace("</oai:record>", " ")
+        records = records_xml.split("<oai:record>")
+
+        list_of_records = []
+        for i in range(1, len(records)):
+            record_xml = "<record>\n" + records[i].replace("oai:", "") + "</record>\n"
+            list_of_records.append(xmltodict.parse(record_xml))
+
+        return list_of_records
 
     def parse_author(self, xml):
         """ Spracuje xml obsahujuce meno autora Arguments: xml {str} -- retazec s XML na spracovanie Returns: str --
@@ -46,3 +59,4 @@ class xml_handler:
         """ Spracuje xml obsahujuce cely nazov publikacie Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- nazov publikacie Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         return self.find_in_nested_xml('full_name', xml)
+
