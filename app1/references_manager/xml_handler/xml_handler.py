@@ -58,5 +58,5 @@ class xml_handler:
     def parse_full_name(self, xml):
         """ Spracuje xml obsahujuce cely nazov publikacie Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- nazov publikacie Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        return self.find_in_nested_xml(xml, 'full_name')[0]
-
+        res = self.find_in_nested_xml(xml, 'title')[0]
+        return " ".join(res['#text'].split())
