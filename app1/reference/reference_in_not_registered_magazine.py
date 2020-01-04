@@ -15,18 +15,20 @@ class reference_in_not_registered_magazine(reference):
         else:
             self.name = data["name"]
 
-        if "category" in data and "year" in data and "author" in data and "source" in data and "page" in data:
+        if "category" in data and "year" in data and "author" in data and "source" in data and "page" in data and "field008" in data and "field035" in data:
             self.category = data["category"]
             self.year = data["year"]
             self.author = data["author"]
             self.source = data["source"]
             self.page = data["page"]
+            self.field008 = data["field008"]
+            self.field035 = data["field035"]
 
         else:
             raise MissingDataException(self.name)
 
     def is_valid(self):
-        for i in self.category, self.year, self.author, self.name, self.source, self.page:
+        for i in self.category, self.year, self.author, self.name, self.source, self.page, self.field008, self.field035:
             if i is None:
                 return False
         return True
@@ -36,4 +38,5 @@ class reference_in_not_registered_magazine(reference):
 
     def __str__(self):
         return f"{self.name}. {self.author}. {self.year}"
+
 
