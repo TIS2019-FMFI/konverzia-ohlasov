@@ -16,10 +16,13 @@ class file_writer:
         """
         self.file = open(file=path + name, encoding=encoding, mode='w')
 
-    def write_reference(self, reference):
-        """Zapise do suboru jeden ohlas vo forme iso2709        
+    def write_record(self, field035="", field008="", references):
+        """Zapise do suboru jeden record vo forme iso2709        
         Arguments:
-            reference {reference} -- ohlas na zapisanie
+            field035 -- retazec obsahujuci data do pola 035
+            field008 -- retazec obsahujuci data do pola 008
+            references {set(reference)} -- set ohlasov na zapisanie
+            do pola 591 
         """
         raise NotImplementedError
 
