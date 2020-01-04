@@ -1,14 +1,17 @@
-from app1.references_manager.exceptions import CrepConnectionError
 import requests
+
+from app1.references_manager.exceptions import CrepConnectionError
+
 
 class crepc_connector:
     """trieda zabezpecujuca komunikaciu s centralnym
     registrom publikacnej cinnosti
-    """    
+    """
+
     def __init__(self):
         pass
 
-    def get_references(self,since,to=""):
+    def get_references(self, since, to=""):
         """ 
         Ziska novo vzniknute ohlasy       
         Arguments:
@@ -31,7 +34,7 @@ class crepc_connector:
             params["until"]=to
         try:
             r = requests.get(url = url, params = params)
-            return r.content
+            return str(r.content)
         except:
             raise CrepConnectionError
 
@@ -53,7 +56,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return r.content
+            return str(r.content)
         except:
             raise CrepConnectionError
         
@@ -75,7 +78,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return r.content
+            return str(r.content)
         except:
             raise CrepConnectionError
     
@@ -96,7 +99,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return r.content
+            return str(r.content)
         except:
             raise CrepConnectionError
     
@@ -117,6 +120,6 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return r.content
+            return str(r.content)
         except:
             raise CrepConnectionError
