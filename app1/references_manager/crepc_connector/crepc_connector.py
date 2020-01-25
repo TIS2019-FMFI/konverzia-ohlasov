@@ -38,6 +38,18 @@ class crepc_connector:
         except:
             raise CrepConnectionError
 
+    def get_references_with_token(self,token):
+        url = "https://app.crepc.sk/oai/citation"
+        params = {"verb": "ListRecords",
+                  "metadataPrefix": "xml-crepc2",
+                  "resumptionToken": token
+                  }
+        try:
+            r = requests.get(url=url, params=params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+
 
     def get_author_for(self, id):
         """" 

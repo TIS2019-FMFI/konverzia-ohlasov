@@ -71,3 +71,11 @@ class xml_handler:
         res = self.find_in_nested_xml(xml, 'title')[0]
         return " ".join(res['#text'].split())
 
+    def parse_token(self,xml):
+        """
+        Ziska token z xml.
+        :param xml:  pre parsovanie
+        :return:  str -- token ak ho xml obsahuje inak None
+        """
+        raise NotImplementedError
+
