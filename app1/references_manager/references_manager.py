@@ -51,7 +51,7 @@ class references_manager:
             zoskupene_referencie = self.group_references(self.create_references(references))
 
             for r in zoskupene_referencie:
-                self.writer.write_record(pole035=r[0], references=zoskupene_referencie[r])
+                self.writer.write_record(pole035=r, references=zoskupene_referencie[r])
 
 
         except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
@@ -65,7 +65,9 @@ class references_manager:
         fact=reference_factory()
         for r in ref:
             try:
-                set.add(fact.get_reference(r))
+                akt=fact.get_reference(r)
+                if akt is not None:
+                    set.add(akt)
             except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
                 self.logger.log_error(e)
         return ret
@@ -73,7 +75,7 @@ class references_manager:
     def group_references(self, ref):
         ret = {}
         for r in ref:
-            if r.pole035 not in ret:
-                ret[r.pole035] = set()
-            ret[r.pole035].add(r)
+            if r.field035 not in ret:
+                ret[r.field035] = set()
+            ret[r.field035].add(r)
         return ret
