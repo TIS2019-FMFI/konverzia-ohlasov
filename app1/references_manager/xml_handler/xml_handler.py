@@ -130,7 +130,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                      :return:  str -- id zdroja
                                        """
-        raise NotImplementedError
+        return self.parse_source(xml)
 
     def parse_source_name(self, xml):
         """  :param xml:  pre parsovanie
