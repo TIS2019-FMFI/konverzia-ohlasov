@@ -21,12 +21,7 @@ class xml_handler:
         except():
             return WrongXmlDataToParse
 
-    def parse_references(self, xml):
-        """ Spracuje aktualizovane ohlasy
-        Arguments: xml {str} -- retazec s XML na spracovanie
-        Returns: list[dict{str:str}] -- zoznam slovnikov, jeden slovnik reprezentuje data z jedneho ohlasu
-        Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-
+    def parse_unformatted_references(self, xml):
         begin = xml.find('<oai:record>')
         end = xml.rfind('</oai:record>') + len("</oai:record>")
 
@@ -37,9 +32,30 @@ class xml_handler:
         list_of_records = []
         for i in range(1, len(records)):
             record_xml = "<record>\n" + records[i].replace("oai:", "") + "</record>\n"
-            list_of_records.append(xmltodict.parse(record_xml))
+            list_of_records.append(record_xml)
 
         return list_of_records
+
+    def parse_references(self, xml):
+        # (id_recordu, id_responseto, strana_response_to, citation_category_z_response_to)
+        unformatted = self.parse_unformatted_references(xml)
+
+        res = []
+        for ref in unformatted:
+            record_id = self.find_in_nested_xml(ref, 'header')[0]['identifier'][len('crepc.sk:biblio/'):]
+            response_to_ids = self.find_in_nested_xml(ref, 'cross_biblio_biblio')[0]
+            response_to_page = self.find_in_nested_xml(ref, 'number_from')
+
+            if len(response_to_page) > 0:
+                response_to_page = response_to_page[0]['latin']
+            else:
+                response_to_page = None
+            for response in response_to_ids:
+                if 'citation_category' in response:
+                    response_to_id = response['rec_biblio']['@id']
+                    response_to_category = response['citation_category']
+                    res.append((record_id, response_to_id, response_to_page, response_to_category))
+        return res
 
     def parse_author(self, xml):
         """ Spracuje xml obsahujuce meno autora
@@ -71,86 +87,104 @@ class xml_handler:
         res = self.find_in_nested_xml(xml, 'title')[0]
         return " ".join(res['#text'].split())
 
-    def parse_token(self,xml):
+    def parse_token(self, xml):
         """
         Ziska token z xml.
         :param xml:  pre parsovanie
         :return:  str -- token ak ho xml obsahuje inak None
         """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]['#text']
 
-    def parse_affiliation_ids(self,xml):
+    def parse_affiliation_ids(self, xml):
         """
                 Ziska id prisluchajucich institucii z xml.
-                :param xml:  pre parsovanie
+                :param xml:  pre parsovanies
                 :return:  [str] -- zoznam idciek institucii
                 """
-        raise NotImplementedError
+        affiliations = self.find_in_nested_xml(xml, 'affiliation')
+        ids = []
+        for aff in affiliations:
+            ids.append(nested_lookup('@cross_id', aff))
+        return ids
 
-    def parse_parent_institution_id(self,xml):
+    def parse_parent_institution_id(self, xml):
         """
                 Ziska id rodica institucie z xml.
                 :param xml:  pre parsovanie
                 :return:  str -- id rodicovskej institucie inak None
                 """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'cross_institution_institution')[0]['rec_institution']['@id']
 
-    def parse_year(self,xml):
+    def parse_year(self, xml):
         """
                 Ziska rok z xml.
                 :param xml:  pre parsovanie
                 :return:  str -- rok
                 """
-        raise NotImplementedError
-    def parse_authors_ids(self,xml):
+        return self.find_in_nested_xml(xml, 'year')[0]
+
+    def parse_authors_ids(self, xml):
         """
                         :param xml:  pre parsovanie
                         :return:  [str] -- idcka autorov
                         """
-        raise NotImplementedError
+        ids = []
+        authors = self.find_in_nested_xml(xml, 'rec_person')
+        for author in authors:
+            ids.append(author['@id'])
+        return ids
+
     def parse_author_name(self, xml):
         """  :param xml:  pre parsovanie
              :return:  str -- cele meno autora
                                """
-        raise NotImplementedError
+        first_name = self.find_in_nested_xml(xml, 'firstname')
+        last_name = self.find_in_nested_xml(xml, 'lastname')
+        return first_name[0] + " " + last_name[0]
 
-    def parse_source_id(self,xml):
+    def parse_source_id(self, xml):
         """  :param xml:  pre parsovanie
                      :return:  str -- id zdroja
                                        """
-        raise NotImplementedError
-    def parse_source_name(self,xml):
+        return self.parse_source(xml)
+
+    def parse_source_name(self, xml):
         """  :param xml:  pre parsovanie
                      :return:  str -- nazov zdroja
                                        """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
 
-    def parse_page(self,xml):
+    def parse_page(self, xml):
         """  :param xml:  pre parsovanie
                      :return:  str -- strana
                                        """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'page')[0]
 
-    def parse_databeses_ids(self,xml):
+    def parse_databeses_ids(self, xml):
         """  :param xml:  pre parsovanie
                             :return:  [str] -- idcka databaz
                                               """
-        raise NotImplementedError
+        ids = []
+        databases = self.find_in_nested_xml(xml, 'cross_biblio_database')[0]
+        for db in databases:
+            ids.append(db['rec_database']['@id'])
+        return ids
 
-    def parse_database_name(self,xml):
+    def parse_database_name(self, xml):
         """  :param xml:  pre parsovanie
                             :return:  str -- nazov databazy
                                               """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'rec_database')[0]['name'][0]['#text']
 
-    def parse_publisher_id(self,xml):
+    def parse_publisher_id(self, xml):
         """  :param xml:  pre parsovanie
                                    :return:  str -- id vydavatela
                                                      """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'cross_biblio_institution')[0]['rec_institution']['@id']
 
-    def parse_institution_name(self,xml):
+    def parse_institution_name(self, xml):
         """  :param xml:  pre parsovanie
                                            :return:  str -- nazov institucie
                                                              """
-        raise NotImplementedError
+        return self.parse_source(xml)
+
