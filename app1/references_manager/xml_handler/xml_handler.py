@@ -105,7 +105,7 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- rok
                 """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'year')[0]
 
     def parse_authors_ids(self, xml):
         """
