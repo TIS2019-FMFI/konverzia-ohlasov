@@ -77,7 +77,7 @@ class xml_handler:
         :param xml:  pre parsovanie
         :return:  str -- token ak ho xml obsahuje inak None
         """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]['#text']
 
     def parse_affiliation_ids(self, xml):
         """
