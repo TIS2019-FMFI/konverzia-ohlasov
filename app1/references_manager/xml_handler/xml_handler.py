@@ -164,7 +164,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                                    :return:  str -- id vydavatela
                                                      """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'cross_biblio_institution')[0]['rec_institution']['@id']
 
     def parse_institution_name(self, xml):
         """  :param xml:  pre parsovanie
