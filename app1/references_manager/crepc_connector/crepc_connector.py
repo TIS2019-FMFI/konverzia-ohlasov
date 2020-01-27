@@ -1,13 +1,17 @@
+import requests
+
 from app1.references_manager.exceptions import CrepConnectionError
+
 
 class crepc_connector:
     """trieda zabezpecujuca komunikaciu s centralnym
     registrom publikacnej cinnosti
-    """    
-    def __init__(self):
-        raise NotImplementedError
+    """
 
-    def get_new_references(self,since,to=""):
+    def __init__(self):
+        pass
+
+    def get_references(self, since, to=""):
         """ 
         Ziska novo vzniknute ohlasy       
         Arguments:
@@ -20,34 +24,54 @@ class crepc_connector:
         Raises:
             CrepConnectionError -- ak sa neda pripojit
         """        
-        raise NotImplementedError
+        url="https://app.crepc.sk/oai/citation"
+        params={"from":since,
+        "verb":"ListRecords",
+        "metadataPrefix":"xml-crepc2",
+        "set":"24712"
+        }
+        if to:
+            params["until"]=to
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
 
-    def get_updated_references(self, since,to=""):
-        """" 
-        Ziska upravene ohlasy       
-        Arguments:
-            since {str} -- datum od ktoreho sa budu ziskavat ohlasy
-        
-        Keyword Arguments:
-            to {str} -- datum po ktory sa budu ziskavat ohlasy (default: {""})
-        Returns:
-            Str -- retazec obsahujuci XML so zoznamom ohlasov
-        Raises:
-            CrepConnectionError -- ak sa neda pripojit
-        """       
-        raise NotImplementedError
-    
+    def get_references_with_token(self,token):
+        url = "https://app.crepc.sk/oai/citation"
+        params = {"verb": "ListRecords",
+                  "metadataPrefix": "xml-crepc2",
+                  "resumptionToken": token
+                  }
+        try:
+            r = requests.get(url=url, params=params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+
+
     def get_author_for(self, id):
         """" 
         Ziska cele meno autora pre zadane id.      
         Arguments:
             id {str} -- id autora
         Returns:
-            Str -- cele meno autora
+            Str -- xml obsahujuce cele meno autora
         Raises:
             CrepConnectionError -- ak sa neda pripojit
-        """       
-        raise NotImplementedError
+        """
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:person/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+        
     
     def get_database_for(self, id):
         """" 
@@ -55,11 +79,20 @@ class crepc_connector:
         Arguments:
             id {str} -- id databazy
         Returns:
-            Str -- nazov databazy
+            Str --xml obsahujuce nazov databazy
         Raises:
             CrepConnectionError -- ak sa neda pripojit
         """
-        raise NotImplementedError
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:database/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
     
     def get_source_for(self,id):
         """" 
@@ -67,11 +100,20 @@ class crepc_connector:
         Arguments:
             id {str} -- id zdroja
         Returns:
-            Str -- cely nazov zdroja
+            Str -- xml obsahujuce cely nazov zdroja
         Raises:
             CrepConnectionError -- ak sa neda pripojit
         """
-        raise NotImplementedError
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:biblio/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
     
     def get_full_name_for(self,id):
         """" 
@@ -79,9 +121,58 @@ class crepc_connector:
         Arguments:
             id {str} -- id publikacie
         Returns:
-            Str -- cely nazov publikacie
+            Str -- xml obsahujuce cely nazov publikacie
         Raises:
             CrepConnectionError -- ak sa neda pripojit
         """
-        raise NotImplementedError
-    
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:biblio/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+
+
+    def get_biblio(self,id):
+        """"
+        Arguments:
+            id {str} -- id publikacie
+        Returns:
+            Str -- xml obsahujuce biblio zanam
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
+        """
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:biblio/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+
+    def get_institution(self,id):
+        """"
+        Arguments:
+            id {str} -- id publikacie
+        Returns:
+            Str -- xml obsahujuce  zanam institucie
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
+        """
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:institution/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
