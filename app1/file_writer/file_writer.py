@@ -15,8 +15,10 @@ class file_writer:
             path {str} -- cesta kde bude subor ulozeny (default: {""})
         """
         self.file = open(file=path + name, encoding=encoding, mode='w')
+        self.CONST_FIELD_008 = "|undefinedField|"
+        self.CONST_RECORD_SEPARATOR = '#'
 
-    def write_record(self, field035="", field008="", references):
+    def write_record(self, references, field035="", field008=""):
         """Zapise do suboru jeden record vo forme iso2709        
         Arguments:
             field035 -- retazec obsahujuci data do pola 035
@@ -24,7 +26,24 @@ class file_writer:
             references {set(reference)} -- set ohlasov na zapisanie
             do pola 591 
         """
-        raise NotImplementedError
+
+        leader = self.__create_leader_of_record(field035, field008, references)
+        directory = self.__create_directory_of_record()
+        data_fields = self.__create_data_fields_of_record(field035, field008, references)
+
+        result_record = leader + directory + data_fields + self.CONST_RECORD_SEPARATOR
+        self.file.write(result_record)
+
+    def __create_leader_of_record(self, field035, field008, references):
+        return ""
+
+
+    def __create_directory_of_record(self):
+        return ""
+
+
+    def __create_data_fields_of_record(self, field035, field008, references):
+        return ""
 
     def close(self):
         """Ukonci zapis a zavrie subor.
