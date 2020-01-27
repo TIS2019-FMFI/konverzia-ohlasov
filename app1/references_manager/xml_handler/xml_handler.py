@@ -136,7 +136,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                      :return:  str -- nazov zdroja
                                        """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
 
     def parse_page(self, xml):
         """  :param xml:  pre parsovanie
