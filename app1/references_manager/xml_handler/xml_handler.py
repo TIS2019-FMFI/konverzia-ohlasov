@@ -118,7 +118,9 @@ class xml_handler:
         """  :param xml:  pre parsovanie
              :return:  str -- cele meno autora
                                """
-        raise NotImplementedError
+        first_name = self.find_in_nested_xml(xml, 'firstname')
+        last_name = self.find_in_nested_xml(xml, 'lastname')
+        return first_name[0] + " " + last_name[0]
 
     def parse_source_id(self, xml):
         """  :param xml:  pre parsovanie
