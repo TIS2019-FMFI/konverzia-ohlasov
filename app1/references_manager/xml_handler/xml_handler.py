@@ -148,7 +148,11 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                             :return:  [str] -- idcka databaz
                                               """
-        raise NotImplementedError
+        ids = []
+        databases = self.find_in_nested_xml(xml, 'cross_biblio_database')[0]
+        for db in databases:
+            ids.append(db['rec_database']['@id'])
+        return ids
 
     def parse_database_name(self, xml):
         """  :param xml:  pre parsovanie
@@ -167,4 +171,5 @@ class xml_handler:
                                            :return:  str -- nazov institucie
                                                              """
         raise NotImplementedError
+
 
