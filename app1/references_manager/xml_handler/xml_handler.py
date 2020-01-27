@@ -21,6 +21,13 @@ class xml_handler:
         except():
             return WrongXmlDataToParse
 
+    def parse_affiliation_ids(self, xml):
+        affiliations = self.find_in_nested_xml(xml, 'affiliation')
+        ids = set()
+        for aff in affiliations:
+            ids.add(nested_lookup('@cross_id', aff))
+        return ids
+
     def parse_references(self, xml):
         """ Spracuje aktualizovane ohlasy
         Arguments: xml {str} -- retazec s XML na spracovanie
@@ -70,4 +77,3 @@ class xml_handler:
         Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         res = self.find_in_nested_xml(xml, 'title')[0]
         return " ".join(res['#text'].split())
-
