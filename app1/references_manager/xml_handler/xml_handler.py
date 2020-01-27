@@ -97,7 +97,7 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- id rodicovskej institucie inak None
                 """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'cross_institution_institution')[0]['rec_institution']['@id']
 
     def parse_year(self, xml):
         """
@@ -170,6 +170,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                                            :return:  str -- nazov institucie
                                                              """
-        raise NotImplementedError
+        return self.parse_source(xml)
+
 
 
