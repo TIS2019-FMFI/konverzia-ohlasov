@@ -154,7 +154,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                             :return:  str -- nazov databazy
                                               """
-        raise NotImplementedError
+        return self.find_in_nested_xml(xml, 'rec_database')[0]['name'][0]['#text']
 
     def parse_publisher_id(self, xml):
         """  :param xml:  pre parsovanie
