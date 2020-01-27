@@ -86,9 +86,9 @@ class xml_handler:
                 :return:  [str] -- zoznam idciek institucii
                 """
         affiliations = self.find_in_nested_xml(xml, 'affiliation')
-        ids = set()
+        ids = []
         for aff in affiliations:
-            ids.add(nested_lookup('@cross_id', aff))
+            ids.append(nested_lookup('@cross_id', aff))
         return ids
 
     def parse_parent_institution_id(self, xml):
@@ -112,7 +112,11 @@ class xml_handler:
                         :param xml:  pre parsovanie
                         :return:  [str] -- idcka autorov
                         """
-        raise NotImplementedError
+        ids = []
+        authors = self.find_in_nested_xml(xml, 'rec_person')
+        for author in authors:
+            ids.append(author['@id'])
+        return ids
 
     def parse_author_name(self, xml):
         """  :param xml:  pre parsovanie
@@ -163,3 +167,4 @@ class xml_handler:
                                            :return:  str -- nazov institucie
                                                              """
         raise NotImplementedError
+
