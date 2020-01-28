@@ -27,14 +27,14 @@ class reference_factory:
         data['source']=self.get_source(record591)
         data['page']=page
         data['field035']="oai:crepc.sk:biblio/"+id035
-        if citation_cat in ["4"]:
+        if citation_cat in ["04"]:
             return reference_in_not_registered_magazine(data=data)
 
-        if citation_cat in[""]:
+        if citation_cat in["01","02"]:
             data['referenceDatabase']=self.get_database(record591)
             return reference_in_registered_magazine(data=data)
 
-        if citation_cat in[""]:
+        if citation_cat in["03","05","06","07","08"]:
             data['publisher']=self.get_publisher(record591)
             return reference_in_publication(data=data)
 
