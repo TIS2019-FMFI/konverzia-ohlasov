@@ -7,7 +7,7 @@ from app1.references_manager.crepc_connector.crepc_connector import crepc_connec
 class reference_factory:
     """factory pre ziskavanie instancii ohlasov
     """
-    def init(self):
+    def __init__(self):
         self.handler = xml_handler()
         self.connector = crepc_connector()
     def get_reference(self, id591="", id035="", citation_cat="01",page="1"):
