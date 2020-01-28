@@ -38,13 +38,13 @@ class file_writer:
 
         leader = self.__create_leader_of_record(data_fields)
 
-        result_record = leader + data_fields + self.CONST_RECORD_SEPARATOR
+        result_record = leader + data_fields
         self.file.write(result_record)
 
     def __create_leader_of_record(self, data_fields):
         # information about record
 
-        length = f'{(self.CONST_LEADER_LENGTH + len(self.CONST_FIELD_SEPARATOR) + len(data_fields) + len(self.CONST_FIELD_SEPARATOR)):05}'   #record's length
+        length = f'{(self.CONST_LEADER_LENGTH + len(self.CONST_FIELD_SEPARATOR) + len(data_fields)):05}'   #record's length
         status = 'n'                                    #new
         type = 'a'                                      #language material
         implementation_defined = "  "
@@ -62,7 +62,7 @@ class file_writer:
         result = ""
 
         result += field008 + self.CONST_FIELD_SEPARATOR
-        result += self.CONST_SUBFIELD_SEPARATOR + field035 + self.CONST_FIELD_SEPARATOR
+        result += self.CONST_SUBFIELD_SEPARATOR + 'a' + field035 + self.CONST_FIELD_SEPARATOR
 
         for i in references:
             result += i.to_iso2709_string()
