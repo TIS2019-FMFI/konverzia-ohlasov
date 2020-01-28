@@ -26,6 +26,8 @@ class reference_in_publication(reference):
 
         else:
             raise MissingDataException(self.name)
+        self.CONST_SUBFIELD_SEPARATOR = chr(31)
+
 
     def is_valid(self):
         for i in self.category, self.year, self.author, self.name, self.source, self.publisher, self.page:
@@ -34,7 +36,9 @@ class reference_in_publication(reference):
         return True
 
     def to_iso2709_string(self):
-        return f"\9 [o{self.category}] \d {self.year} \m {self.author} \\n {self.name} \p {self.source} \\r {self.publisher} \s s. {self.page}"
+        return f"{self.CONST_SUBFIELD_SEPARATOR}9[o{self.category}]{self.CONST_SUBFIELD_SEPARATOR}d{self.year}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}m{self.author}{self.CONST_SUBFIELD_SEPARATOR}n{self.name}{self.CONST_SUBFIELD_SEPARATOR}p{self.source}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}r{self.publisher}{self.CONST_SUBFIELD_SEPARATOR}ss. {self.page}"
     
     def __str__(self):
         return f"{self.name}. {self.author}. {self.year}"

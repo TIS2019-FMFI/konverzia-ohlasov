@@ -34,7 +34,10 @@ class reference_in_registered_magazine(reference):
         return True
 
     def to_iso2709_string(self):
-        return f"\9 [o{self.category}] \d {self.year} \m {self.author} \\n {self.name} \p {self.source} \s s. {self.page} \\t {self.referenceDatabase}"
+        return f"{self.CONST_SUBFIELD_SEPARATOR}9[o{self.category}]{self.CONST_SUBFIELD_SEPARATOR}d{self.year}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}m{self.author}{self.CONST_SUBFIELD_SEPARATOR}n{self.name}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}p{self.source}{self.CONST_SUBFIELD_SEPARATOR}ss. {self.page}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}t{self.referenceDatabase}"
 
     def __str__(self):
         return f"{self.name}. {self.author}. {self.year}"
