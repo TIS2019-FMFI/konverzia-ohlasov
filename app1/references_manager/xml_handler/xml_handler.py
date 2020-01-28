@@ -17,7 +17,10 @@ class xml_handler:
 
     def find_in_nested_xml(self, xml, key):
         try:
-            return nested_lookup(key, self.parse_xml(xml))
+            tmp=nested_lookup(key, self.parse_xml(xml))
+            if type(tmp)!=list:
+                tmp=[tmp]
+            return tmp
         except():
             return WrongXmlDataToParse
 
@@ -105,10 +108,11 @@ class xml_handler:
                 :param xml:  pre parsovanies
                 :return:  [str] -- zoznam idciek institucii
                 """
-        affiliations = self.find_in_nested_xml(xml, 'affiliation')
+        affiliations = self.find_in_nested_xml(xml, 'rec_institution')
         ids = []
         for aff in affiliations:
-            ids.append(nested_lookup('@cross_id', aff))
+            if len(nested_lookup('@id', aff)):
+                ids.append(nested_lookup('@id', aff)[0])
         return ids
 
     def parse_parent_institution_id(self, xml):
@@ -117,6 +121,8 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- id rodicovskej institucie inak None
                 """
+        if len(self.find_in_nested_xml(xml, 'cross_institution_institution'))==0:
+            return None
         return self.find_in_nested_xml(xml, 'cross_institution_institution')[0]['rec_institution']['@id']
 
     def parse_year(self, xml):
@@ -125,7 +131,9 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- rok
                 """
+
         return self.find_in_nested_xml(xml, 'year')[0]
+
 
     def parse_authors_ids(self, xml):
         """
@@ -156,7 +164,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                      :return:  str -- nazov zdroja
                                        """
-        return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
+        return self.parse_full_name(xml)
 
     def parse_page(self, xml):
         """  :param xml:  pre parsovanie
@@ -190,5 +198,5 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                                            :return:  str -- nazov institucie
                                                              """
-        return self.parse_source(xml)
+        return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
 
