@@ -16,7 +16,9 @@ class file_writer:
         """
         self.file = open(file=path + name, encoding=encoding, mode='w')
         self.CONST_FIELD_008 = "200127suuuuuuuuxx |   |||   |||| ||und||"
-        self.CONST_RECORD_SEPARATOR = '#'
+        self.CONST_RECORD_SEPARATOR = chr(29)
+        self.CONST_FIELD_SEPARATOR = chr(30)
+        self.CONST_SUBFIELD_SEPARATOR = chr(31)
 
     def write_record(self, references, field035="", field008=""):
         """Zapise do suboru jeden record vo forme iso2709        
@@ -28,7 +30,10 @@ class file_writer:
         """
 
         leader = self.__create_leader_of_record(field035, field008, references)
-        data_fields = self.__create_data_fields_of_record(field035, field008, references)
+        if(field008 == ""):
+            data_fields = self.__create_data_fields_of_record(field035, self.CONST_FIELD_008, references)
+        else:
+            data_fields = self.__create_data_fields_of_record(field035, field008, references)
 
         result_record = leader + data_fields + self.CONST_RECORD_SEPARATOR
         self.file.write(result_record)
@@ -37,10 +42,18 @@ class file_writer:
         return ""
 
     def __create_data_fields_of_record(self, field035, field008, references):
-        return ""
+        result = ""
+
+        result += field008 + self.CONST_FIELD_SEPARATOR
+        result += self.CONST_SUBFIELD_SEPARATOR + field035 + self.CONST_FIELD_SEPARATOR
+
+        for i in references:
+            result += i.to_iso2709_string()
+            result += self.CONST_FIELD_SEPARATOR
+
+        return result
 
     def close(self):
         """Ukonci zapis a zavrie subor.
         """
         self.file.close()
-
