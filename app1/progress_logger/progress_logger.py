@@ -1,6 +1,6 @@
-#from app1.reference.reference import reference
-#from app1.reference.exceptions import MissingDataException
-#from app1.references_manager.exceptions import CrepConnectionError, WrongXmlDataToParse
+from app1.reference.reference import reference
+from app1.reference.exceptions import MissingDataException
+from app1.references_manager.exceptions import CrepConnectionError, WrongXmlDataToParse
 
 class progress_logger:
     """
@@ -19,7 +19,7 @@ class progress_logger:
         """        
 
         file_with_path = output_file_path + output_file_name
-        self.file = open(file_with_path, 'a')
+        self.file = open(file_with_path, 'w')
         #TODO ak sa bude appendovat tak nejaku halvicku na zaciatok
         self.buffer = ""
 

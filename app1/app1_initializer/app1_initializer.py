@@ -1,5 +1,6 @@
-#from app1.references_manager.references_manager import references_manager
-#from app1.progress_logger.progress_logger import progress_logger
+from app1.references_manager.references_manager import references_manager
+from app1.progress_logger.progress_logger import progress_logger
+from app1.file_writer.file_writer import file_writer
 import sys
 import getopt
 from datetime import datetime
@@ -17,9 +18,9 @@ class app1_initializer:
             params {list[str]} --  argumenty pri spusteni
         """        
         self.output_file = "output"
-        self.output_path = "./output/"
+        self.output_path = ""
         self.log_file = "log"
-        self.log_path = "./output/"
+        self.log_path = ""
         self.from_date = None
         self.to_date = datetime.today()
         
@@ -61,8 +62,10 @@ class app1_initializer:
         if fr is not None:
             self.from_date = fr
 
-'''#TODO zmazat
-#kontrolny vypis
+        self.run_app()
+
+        '''#TODO zmazat
+        #kontrolny vypis
         print('od :', self.from_date, self.from_date.tzinfo)
         print('do :', self.to_date)
         print('Output file is :', self.output_file)
@@ -105,8 +108,11 @@ class app1_initializer:
         Vyrobi instanciu progress_logger a file_writer
         nasledne aj instanciu references_manager na ktorej zavola
         pozadovanu metodu.
-        """        
-        raise NotImplementedError
+        """
+        logger=progress_logger(output_file_name=self.log_file,output_file_path=self.log_path)
+        writer= file_writer(name=self.output_file,path=self.output_path)
+        manager=references_manager(self,logger,writer)
+        manager.get_references()
 
 
 if __name__ == "__main__":
