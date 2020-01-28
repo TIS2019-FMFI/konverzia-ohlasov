@@ -50,6 +50,8 @@ class xml_handler:
                 response_to_page = response_to_page[0]['latin']
             else:
                 response_to_page = None
+            if type(response_to_ids) != list:
+                response_to_ids=[response_to_ids]
             for response in response_to_ids:
                 if 'citation_category' in response:
                     response_to_id = response['rec_biblio']['@id']
@@ -93,6 +95,8 @@ class xml_handler:
         :param xml:  pre parsovanie
         :return:  str -- token ak ho xml obsahuje inak None
         """
+        if '#text' not in self.find_in_nested_xml(xml, 'oai:resumptionToken'):
+            return None
         return self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]['#text']
 
     def parse_affiliation_ids(self, xml):
