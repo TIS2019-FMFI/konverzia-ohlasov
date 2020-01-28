@@ -26,6 +26,7 @@ class reference_in_registered_magazine(reference):
 
         else:
             raise MissingDataException(self.name)
+        self.CONST_SUBFIELD_SEPARATOR = chr(31)
 
     def is_valid(self):
         for i in self.category, self.year, self.author, self.name, self.source, self.page, self.referenceDatabase:
