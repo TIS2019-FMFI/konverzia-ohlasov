@@ -14,7 +14,7 @@ class reference_in_publication(reference):
         else:
             self.name = data["name"]
 
-        if "category" in data and "year" in data and "author" in data and "source" in data and "page" in data and "publisher" in data and "field008" in data and "field035" in data:
+        if "category" in data and "year" in data and "author" in data and "source" in data and "page" in data and "publisher" in data and "field035" in data:
             self.category = data["category"]
             self.year = data["year"]
             self.author = data["author"]
