@@ -34,7 +34,7 @@ class crepc_connector:
             params["until"]=to
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
 
@@ -46,7 +46,7 @@ class crepc_connector:
                   }
         try:
             r = requests.get(url=url, params=params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
 
@@ -68,7 +68,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
         
@@ -90,7 +90,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
     
@@ -111,7 +111,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
     
@@ -132,7 +132,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
 
@@ -153,7 +153,7 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
 
@@ -173,6 +173,6 @@ class crepc_connector:
         }
         try:
             r = requests.get(url = url, params = params)
-            return str(r.content)
+            return r.content.decode("utf-8")
         except:
             raise CrepConnectionError
