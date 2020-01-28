@@ -51,6 +51,9 @@ class references_manager:
             zoskupene_referencie = self.group_references(self.create_references(references))
 
             for r in zoskupene_referencie:
+                print(r)
+                for i in zoskupene_referencie[r]:
+                    print(str(i))
                 self.writer.write_record(pole035=r, references=zoskupene_referencie[r])
 
 
@@ -65,7 +68,11 @@ class references_manager:
         fact=reference_factory()
         for r in ref:
             try:
+<<<<<<< Updated upstream
                 akt=fact.get_reference(r)
+=======
+                akt=fact.get_reference(id035=r[1], id591=r[0], citation_cat=r[3],page=r[2])
+>>>>>>> Stashed changes
                 if akt is not None:
                     set.add(akt)
             except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:

@@ -61,14 +61,14 @@ class app1_initializer:
         if fr is not None:
             self.from_date = fr
 
-#TODO zmazat
+'''#TODO zmazat
 #kontrolny vypis
         print('od :', self.from_date, self.from_date.tzinfo)
         print('do :', self.to_date)
         print('Output file is :', self.output_file)
         print('Output file path is :',  self.output_path)
         print('log file is :', self.log_file)
-        print('log file path is :',  self.log_path)
+        print('log file path is :',  self.log_path)'''
 
     def changeTimeToFinalFormat(self, time):
         if time is None:
