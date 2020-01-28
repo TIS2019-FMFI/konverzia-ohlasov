@@ -26,6 +26,7 @@ class reference_in_not_registered_magazine(reference):
 
         else:
             raise MissingDataException(self.name)
+        self.CONST_SUBFIELD_SEPARATOR = chr(31)
 
     def is_valid(self):
         for i in self.category, self.year, self.author, self.name, self.source, self.page, self.field008, self.field035:
@@ -34,7 +35,9 @@ class reference_in_not_registered_magazine(reference):
         return True
 
     def to_iso2709_string(self):
-        return f"\9 [o{self.category}] \d {self.year} \m {self.author} \\n {self.name} \p {self.source} \s s. {self.page}"
+        return f"{self.CONST_SUBFIELD_SEPARATOR}9[o{self.category}]{self.CONST_SUBFIELD_SEPARATOR}d{self.year}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}m{self.author}{self.CONST_SUBFIELD_SEPARATOR}n{self.name}" \
+               f"{self.CONST_SUBFIELD_SEPARATOR}p{self.source}{self.CONST_SUBFIELD_SEPARATOR}ss. {self.page}"
 
     def __str__(self):
         return f"{self.name}. {self.author}. {self.year}"
