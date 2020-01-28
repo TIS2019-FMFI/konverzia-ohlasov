@@ -38,11 +38,25 @@ class file_writer:
 
         leader = self.__create_leader_of_record(data_fields)
 
-        result_record = leader + data_fields
+        result_record = leader + data_fields + self.CONST_RECORD_SEPARATOR
         self.file.write(result_record)
 
     def __create_leader_of_record(self, data_fields):
-        return ""
+        # information about record
+
+        length = f'{(self.CONST_LEADER_LENGTH + len(self.CONST_FIELD_SEPARATOR) + len(data_fields) + len(self.CONST_FIELD_SEPARATOR)):05}'   #record's length
+        status = 'n'                                    #new
+        type = 'a'                                      #language material
+        implementation_defined = "  "
+        character_coding_scheme = 'a'                   #UCS/Unicode
+        indicator_count = '2'                           #default
+        subfield_code_length = '2'                      #identifier length, default
+        base_address_of_data = f'{(self.CONST_LEADER_LENGTH + len(self.CONST_FIELD_SEPARATOR)):05}'  #start position data field
+        implementation_defined2 = "   "
+        entry_map = "4500"                              #default
+
+        result_record = length + status + type + implementation_defined + character_coding_scheme + indicator_count + subfield_code_length + base_address_of_data + implementation_defined2 + entry_map
+        return result_record + self.CONST_FIELD_SEPARATOR
 
     def __create_data_fields_of_record(self, field035, field008, references):
         result = ""
