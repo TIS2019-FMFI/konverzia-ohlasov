@@ -19,6 +19,7 @@ class file_writer:
         self.CONST_RECORD_SEPARATOR = chr(29)
         self.CONST_FIELD_SEPARATOR = chr(30)
         self.CONST_SUBFIELD_SEPARATOR = chr(31)
+        self.CONST_LEADER_LENGTH = 24
 
     def write_record(self, references, field035="", field008=""):
         """Zapise do suboru jeden record vo forme iso2709        
@@ -29,16 +30,18 @@ class file_writer:
             do pola 591 
         """
 
-        leader = self.__create_leader_of_record(field035, field008, references)
         if(field008 == ""):
             data_fields = self.__create_data_fields_of_record(field035, self.CONST_FIELD_008, references)
         else:
             data_fields = self.__create_data_fields_of_record(field035, field008, references)
+        data_fields += self.CONST_RECORD_SEPARATOR
 
-        result_record = leader + data_fields + self.CONST_RECORD_SEPARATOR
+        leader = self.__create_leader_of_record(data_fields)
+
+        result_record = leader + data_fields
         self.file.write(result_record)
 
-    def __create_leader_of_record(self, field035, field008, references):
+    def __create_leader_of_record(self, data_fields):
         return ""
 
     def __create_data_fields_of_record(self, field035, field008, references):
