@@ -45,16 +45,14 @@ class references_manager:
                 all_xml = connector.get_references_with_token(token)
                 ohlasy_list=handler.parse_references(all_xml)
                 references.update(ohlasy_list)
-                token=handler.parse_token()
+                token=handler.parse_token(all_xml)
 
 
             zoskupene_referencie = self.group_references(self.create_references(references))
 
             for r in zoskupene_referencie:
-                print(r)
                 for i in zoskupene_referencie[r]:
-                    print(str(i))
-                self.writer.write_record(pole035=r, references=zoskupene_referencie[r])
+                    self.writer.write_record(pole035=r, references=zoskupene_referencie[r])
 
 
         except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
