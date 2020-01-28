@@ -21,7 +21,6 @@ class reference_in_publication(reference):
             self.source = data["source"]
             self.page = data["page"]
             self.publisher = data["publisher"]
-            self.field008 = data["field008"]
             self.field035 = data["field035"]
 
         else:

@@ -21,7 +21,6 @@ class reference_in_not_registered_magazine(reference):
             self.author = data["author"]
             self.source = data["source"]
             self.page = data["page"]
-            self.field008 = data["field008"]
             self.field035 = data["field035"]
 
         else:
