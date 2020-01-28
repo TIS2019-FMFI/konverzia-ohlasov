@@ -36,7 +36,7 @@ class references_manager:
 
         try:
             all_xml = connector.get_references(since=start.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-                                               to=aktend.strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
+                                               to=end.strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
             ohlasy_list = handler.parse_references(all_xml)
             references = set()
             references.update(ohlasy_list)
@@ -68,11 +68,7 @@ class references_manager:
         fact=reference_factory()
         for r in ref:
             try:
-<<<<<<< Updated upstream
-                akt=fact.get_reference(r)
-=======
                 akt=fact.get_reference(id035=r[1], id591=r[0], citation_cat=r[3],page=r[2])
->>>>>>> Stashed changes
                 if akt is not None:
                     set.add(akt)
             except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:

@@ -135,3 +135,44 @@ class crepc_connector:
             return str(r.content)
         except:
             raise CrepConnectionError
+
+
+    def get_biblio(self,id):
+        """"
+        Arguments:
+            id {str} -- id publikacie
+        Returns:
+            Str -- xml obsahujuce biblio zanam
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
+        """
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:biblio/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
+
+    def get_institution(self,id):
+        """"
+        Arguments:
+            id {str} -- id publikacie
+        Returns:
+            Str -- xml obsahujuce  zanam institucie
+        Raises:
+            CrepConnectionError -- ak sa neda pripojit
+        """
+        url="https://app.crepc.sk/oai"
+        params={"verb":"GetRecord",
+        "metadataPrefix":"xml-crepc2",
+        "identifier":"oai:crepc.sk:institution/"+id
+        }
+        try:
+            r = requests.get(url = url, params = params)
+            return str(r.content)
+        except:
+            raise CrepConnectionError
