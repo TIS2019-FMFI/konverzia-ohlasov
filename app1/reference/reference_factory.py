@@ -24,7 +24,6 @@ class reference_factory:
         data['category']=citation_cat
         data['year']=self.get_year(record591)
         data['author']=self.get_author(record591)
-        data['source']=self.get_source(record591)
         data['page']=page
         data['field035']="oai:crepc.sk:biblio/"+id035
         if citation_cat in ["04"]:
@@ -32,10 +31,12 @@ class reference_factory:
 
         if citation_cat in["01","02"]:
             data['referenceDatabase']=self.get_database(record591)
+            data['source'] = self.get_source(record591)
             return reference_in_registered_magazine(data=data)
 
         if citation_cat in["03","05","06","07","08"]:
             data['publisher']=self.get_publisher(record591)
+            data['source'] = self.get_name(record591)
             return reference_in_publication(data=data)
 
 
@@ -62,7 +63,9 @@ class reference_factory:
 
 
     def get_publisher(self,record):
-        return self.handler.parse_institution_name(self.connector.get_institution(self.handler.parse_parent_institution_id(record)))
+        if self.handler.parse_publisher_id(record) is not None:
+            return self.handler.parse_institution_name(self.connector.get_institution(self.handler.parse_publisher_id(record)))
+        return "n/a"
 
     def get_database(self,record):
         databazy=self.handler.parse_databeses_ids(record)

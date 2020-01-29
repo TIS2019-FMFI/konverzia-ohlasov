@@ -17,10 +17,7 @@ class xml_handler:
 
     def find_in_nested_xml(self, xml, key):
         try:
-            tmp=nested_lookup(key, self.parse_xml(xml))
-            if type(tmp)!=list:
-                tmp=[tmp]
-            return tmp
+           return nested_lookup(key, self.parse_xml(xml))
         except():
             return WrongXmlDataToParse
 
@@ -81,16 +78,26 @@ class xml_handler:
         Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- id zdroju
         Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        res = self.find_in_nested_xml(xml, 'cross_biblio_biblio')
-        return res[0][0]['rec_biblio']['@id']
+        res = self.delist(self.find_in_nested_xml(xml, 'cross_biblio_biblio'))
+        for i in res:
+            i=self.delist(i)
+            if "@source" in i:
+                return i['rec_biblio']['@id']
+        return None
 
     def parse_full_name(self, xml):
         """ Spracuje xml obsahujuce cely nazov publikacie
         Arguments: xml {str} -- retazec s XML na spracovanie
         Returns: str -- nazov publikacie
         Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
-        res = self.find_in_nested_xml(xml, 'title')[0]
-        return " ".join(res['#text'].split())
+        res = self.find_in_nested_xml(xml, 'title')
+        for i in res:
+            if type(i)==list:
+                i=i[0]
+            if 'title_proper' in nested_lookup('@title_type',i):
+                return " ".join(i['#text'].split())
+
+        return " "
 
     def parse_token(self, xml):
         """
@@ -121,9 +128,14 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- id rodicovskej institucie inak None
                 """
-        if len(self.find_in_nested_xml(xml, 'cross_institution_institution'))==0:
-            return None
-        return self.find_in_nested_xml(xml, 'cross_institution_institution')[0]['rec_institution']['@id']
+        tmp=self.delist(self.find_in_nested_xml(xml, 'cross_institution_institution'))
+        if type(tmp)!=list:
+            tmp=[tmp]
+        for i in tmp:
+            i=self.delist(i)
+            if "parent_child_level" in nested_lookup('@bond_type',i):
+                return self.delist(nested_lookup('rec_institution',i))['@id']
+        return None
 
     def parse_year(self, xml):
         """
@@ -131,8 +143,9 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- rok
                 """
-
-        return self.find_in_nested_xml(xml, 'year')[0]
+        if len(self.find_in_nested_xml(xml, 'year')):
+            return self.find_in_nested_xml(xml, 'year')[0]
+        return "n/a"
 
 
     def parse_authors_ids(self, xml):
@@ -150,9 +163,19 @@ class xml_handler:
         """  :param xml:  pre parsovanie
              :return:  str -- cele meno autora
                                """
-        first_name = self.find_in_nested_xml(xml, 'firstname')
-        last_name = self.find_in_nested_xml(xml, 'lastname')
-        return first_name[0] + " " + last_name[0]
+        first_name = self.delist(self.find_in_nested_xml(xml, 'firstname'))
+        last_name = self.delist(self.find_in_nested_xml(xml, 'lastname'))
+        if type(first_name)==list:
+            if len(first_name):
+                first_name=first_name[0]
+            else:
+                first_name=""
+        if type(last_name) == list:
+            if len(last_name):
+                last_name=last_name[0]
+            else:
+                last_name=""
+        return first_name + " " + last_name
 
     def parse_source_id(self, xml):
         """  :param xml:  pre parsovanie
@@ -174,11 +197,13 @@ class xml_handler:
 
     def parse_databeses_ids(self, xml):
         """  :param xml:  pre parsovanie
-                            :return:  [str] -- idcka databaz
+             :return:  [str] -- idcka databaz
                                               """
         ids = []
-        databases = self.find_in_nested_xml(xml, 'cross_biblio_database')[0]
+        databases = self.find_in_nested_xml(xml, 'cross_biblio_database')
         for db in databases:
+            if type(db)==list:
+                db=db[0]
             ids.append(db['rec_database']['@id'])
         return ids
 
@@ -192,11 +217,18 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                                    :return:  str -- id vydavatela
                                                      """
-        return self.find_in_nested_xml(xml, 'cross_biblio_institution')[0]['rec_institution']['@id']
+        if len(self.find_in_nested_xml(xml, 'cross_biblio_institution')):
+            return self.find_in_nested_xml(xml, 'cross_biblio_institution')[0]['rec_institution']['@id']
+        return None
 
     def parse_institution_name(self, xml):
         """  :param xml:  pre parsovanie
                                            :return:  str -- nazov institucie
                                                              """
         return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
+
+    def delist(self,x):
+        while type(x)==list and len(x)==1:
+            x=x[0]
+        return x
 
