@@ -33,7 +33,6 @@ class xml_handler:
         for i in range(1, len(records)):
             record_xml = "<record>\n" + records[i].replace("oai:", "") + "</record>\n"
             list_of_records.append(record_xml)
-
         return list_of_records
 
     def parse_references(self, xml):
@@ -105,7 +104,7 @@ class xml_handler:
         :param xml:  pre parsovanie
         :return:  str -- token ak ho xml obsahuje inak None
         """
-        if '#text' not in self.find_in_nested_xml(xml, 'oai:resumptionToken'):
+        if '#text' not in self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]:
             return None
         return self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]['#text']
 
