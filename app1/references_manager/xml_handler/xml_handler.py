@@ -96,7 +96,7 @@ class xml_handler:
             if 'title_proper' in nested_lookup('@title_type',i):
                 return " ".join(i['#text'].split())
 
-        return " "
+        return "n/a"
 
     def parse_token(self, xml):
         """
@@ -210,21 +210,54 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                             :return:  str -- nazov databazy
                                               """
-        return self.find_in_nested_xml(xml, 'rec_database')[0]['name'][0]['#text']
+        other=""
+        tmp=self.delist(self.find_in_nested_xml(xml, 'name'))
+        if type(tmp)!=list:
+            tmp=[tmp]
+        for i in tmp:
+            i = self.delist(i)
+            if type(i)!=list:
+                i=[i]
+            if "short_name" in i[0]["@name_type"]:
+                return i[0]["#text"]
+            if other !="":
+                other=i[0]["#text"]
+        return other
 
     def parse_publisher_id(self, xml):
         """  :param xml:  pre parsovanie
                                    :return:  str -- id vydavatela
                                                      """
-        if len(self.find_in_nested_xml(xml, 'cross_biblio_institution')):
-            return self.find_in_nested_xml(xml, 'cross_biblio_institution')[0]['rec_institution']['@id']
+        for i in self.find_in_nested_xml(xml, 'cross_biblio_institution'):
+            if "publisher" in nested_lookup("@role_type",i):
+                return nested_lookup("rec_institution",i)[0]['@id']
         return None
 
     def parse_institution_name(self, xml):
         """  :param xml:  pre parsovanie
                                            :return:  str -- nazov institucie
-                                                             """
-        return self.find_in_nested_xml(xml, 'institution_name')[0][0]['#text']
+                """
+        tmp=self.delist(self.find_in_nested_xml(xml, 'institution_name'))
+        while type(tmp)==list:
+            tmp=tmp[0]
+        return tmp['#text']
+
+    def parse_source_additional(self,xml):
+        res = self.delist(self.find_in_nested_xml(xml, 'cross_biblio_biblio'))
+        for i in res:
+            i = self.delist(i)
+            if "@source" in i:
+                rocnik=""
+                if len(nested_lookup("latin",nested_lookup("volume",i))):
+                    rocnik=nested_lookup("latin",nested_lookup("volume",i))[0]
+                rok=""
+                if len(nested_lookup("year",nested_lookup("date",i))):
+                   rok=nested_lookup("year",nested_lookup("date",i))[0]
+                cislo=""
+                if len(nested_lookup("latin",nested_lookup("issue",i))):
+                   rok=nested_lookup("latin",nested_lookup("issue",i))[0]
+
+        return ""+rocnik+", "+cislo+","+rok
 
     def delist(self,x):
         while type(x)==list and len(x)==1:

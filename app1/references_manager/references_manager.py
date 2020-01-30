@@ -68,7 +68,8 @@ class references_manager:
         counter=0
         for r in ref:
             counter+=1
-            print(f'Ziskavam data k referencii{counter} z {len(ref)}')
+            print(f'Ziskavam data k referencii {counter} z {len(ref)}')
+            print(r)
             try:
                 akt=fact.get_reference(id035=r[1], id591=r[0], citation_cat=r[3],page=r[2])
                 if akt is not None:

@@ -10,6 +10,7 @@ class reference_factory:
     def __init__(self):
         self.handler = xml_handler()
         self.connector = crepc_connector()
+        self.known_inst=set()
     def get_reference(self, id591="", id035="", citation_cat="01",page="1"):
         """
         returns:
@@ -26,16 +27,16 @@ class reference_factory:
         data['author']=self.get_author(record591)
         data['page']=page
         data['field035']="oai:crepc.sk:biblio/"+id035
-        if citation_cat in ["04"]:
+        if citation_cat in ["04","03"]:
             return reference_in_not_registered_magazine(data=data)
 
         if citation_cat in["01","02"]:
             data['referenceDatabase']=self.get_database(record591)
-            data['source'] = self.get_source(record591)
+            data['source'] = self.get_source(record591)+", "+self.get_source_additional(record591)
             return reference_in_registered_magazine(data=data)
 
-        if citation_cat in["03","05","06","07","08"]:
-            data['publisher']=self.get_publisher(record591)
+        if citation_cat in["05","06","07","08"]:
+            data['publisher']=": "+self.get_publisher(record591)+","+data['year']
             data['source'] = self.get_name(record591)
             return reference_in_publication(data=data)
 
@@ -60,6 +61,8 @@ class reference_factory:
         id=self.handler.parse_source_id(record)
         so=self.connector.get_biblio(id)
         return self.handler.parse_source_name(so)
+    def get_source_additional(self,record):
+        return  self.handler.parse_source_additional(record)
 
 
     def get_publisher(self,record):
@@ -72,8 +75,8 @@ class reference_factory:
         ret=""
         for i in databazy:
             akt=self.handler.parse_database_name(self.connector.get_database_for(i))
-            ret+=";"+akt
-        return ret[1:]
+            ret+="; "+akt
+        return ret[2:]
 
     def test_affiliation(self,record):
         aff=self.handler.parse_affiliation_ids(record)
@@ -81,11 +84,17 @@ class reference_factory:
             if self.test_institution_affiliation(i):
                 return True
         return False
+    def get_published_location(self,record):
+        return ""
 
     def test_institution_affiliation(self,id):
+        if id in self.known_inst:
+            return True
         if id=="24712":
             return True
         par=self.handler.parse_parent_institution_id(self.connector.get_institution(id))
         if par is not None:
-            return self.test_institution_affiliation(par)
+            if self.test_institution_affiliation(par):
+                self.known_inst.add(id)
+                return True
         return False
