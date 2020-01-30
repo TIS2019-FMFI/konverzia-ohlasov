@@ -41,4 +41,9 @@ class reference_in_registered_magazine(reference):
 
     def __str__(self):
         return f"{self.name}. {self.author}. {self.year}"
+    def __hash__(self):
+        return hash(self.to_iso2709_string()+self.field035)
+
+    def __eq__(self, other):
+        return type(self)==type(other) and  self.to_iso2709_string()==other.to_iso2709_string() and self.field035==other.field035
 

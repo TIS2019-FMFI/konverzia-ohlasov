@@ -19,7 +19,7 @@ class progress_logger:
         """        
 
         file_with_path = output_file_path + output_file_name
-        self.file = open(file_with_path, 'w')
+        self.file = open(file_with_path, 'w',encoding='utf-8')
         #TODO ak sa bude appendovat tak nejaku halvicku na zaciatok
         self.buffer = ""
 
@@ -30,7 +30,7 @@ class progress_logger:
         """        
         output = "Ohlas: " + reference.__str__() + "sa úspešne zapísal." 
         print(output )
-        self.buffer += output + "\n"
+        self.file.write(output+'\n')
 
     def log_error(self,error):
         """Zapise spravu o chybe pri spracovani ohlasu.
@@ -40,10 +40,9 @@ class progress_logger:
         """        
         output = error.__str__() #este nejake info
         print(output)
-        self.buffer += "error" + "\n"
+        self.file.write(output+'\n')
 
 
     def close(self):
-        """Zapise vsetky zostavajuce zmeny do suboru a zavrie ho. """        
-        self.file.write(self.buffer)
+        """Zapise vsetky zostavajuce zmeny do suboru a zavrie ho. """
         self.file.close()
