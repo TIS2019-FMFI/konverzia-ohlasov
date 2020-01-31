@@ -1,5 +1,6 @@
-from app1.references_manager.exceptions import WrongXmlDataToParse
+from exceptions import WrongXmlDataToParse
 import xmltodict
+from collections import OrderedDict
 from nested_lookup import nested_lookup
 
 
@@ -142,6 +143,9 @@ class xml_handler:
                 :param xml:  pre parsovanie
                 :return:  str -- rok
                 """
+        tmp=self.delist(self.find_in_nested_xml(xml, 'year'))
+        if nested_lookup("#text",tmp):
+            return nested_lookup("#text",tmp)[0]
         if len(self.find_in_nested_xml(xml, 'year')):
             return self.find_in_nested_xml(xml, 'year')[0]
         return "n/a"
@@ -258,6 +262,12 @@ class xml_handler:
                    rok=nested_lookup("latin",nested_lookup("issue",i))[0]
 
         return ""+rocnik+", "+cislo+","+rok
+
+    def parse_type(self,xml):
+        akt=self.find_in_nested_xml(xml, '@form_type')
+        if len(akt):
+            return akt[0]
+        return None
 
     def delist(self,x):
         while type(x)==list and len(x)==1:

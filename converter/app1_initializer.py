@@ -1,6 +1,6 @@
-from app1.references_manager.references_manager import references_manager
-from app1.progress_logger.progress_logger import progress_logger
-from app1.file_writer.file_writer import file_writer
+from references_manager import references_manager
+from progress_logger import progress_logger
+from file_writer import file_writer
 import sys
 import getopt
 from datetime import datetime
@@ -17,9 +17,9 @@ class app1_initializer:
         Arguments:
             params {list[str]} --  argumenty pri spusteni
         """        
-        self.output_file = "output"
+        self.output_file = "output.rec"
         self.output_path = ""
-        self.log_file = "log"
+        self.log_file = "log.txt"
         self.log_path = ""
         self.from_date = None
         self.to_date = datetime.today()
@@ -61,17 +61,8 @@ class app1_initializer:
             self.to_date = to
         if fr is not None:
             self.from_date = fr
-
         self.run_app()
 
-        '''#TODO zmazat
-        #kontrolny vypis
-        print('od :', self.from_date, self.from_date.tzinfo)
-        print('do :', self.to_date)
-        print('Output file is :', self.output_file)
-        print('Output file path is :',  self.output_path)
-        print('log file is :', self.log_file)
-        print('log file path is :',  self.log_path)'''
 
     def changeTimeToFinalFormat(self, time):
         if time is None:

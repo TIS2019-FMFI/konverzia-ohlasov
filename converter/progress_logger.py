@@ -1,6 +1,6 @@
-from app1.reference.reference import reference
-from app1.reference.exceptions import MissingDataException
-from app1.references_manager.exceptions import CrepConnectionError, WrongXmlDataToParse
+from reference import reference
+from exceptions import MissingDataException
+from exceptions import CrepConnectionError, WrongXmlDataToParse
 
 class progress_logger:
     """
@@ -28,17 +28,21 @@ class progress_logger:
         Arguments:
             reference {reference} -- ohlas na zapisanie
         """        
-        output = "Ohlas: " + reference.__str__() + "sa úspešne zapísal." 
+        output = "[info] Ohlas: " + reference.__str__() + "sa úspešne zapísal."
         print(output )
         self.file.write(output+'\n')
 
+    def log_warning(self,msg):
+        output = "[warning] Ohlas: " +msg
+        print(output)
+        self.file.write(output + '\n')
     def log_error(self,error):
         """Zapise spravu o chybe pri spracovani ohlasu.
         
         Arguments:
             error {exception} -- vzniknuta chyba
         """        
-        output = error.__str__() #este nejake info
+        output = "error "+error.__str__() #este nejake info
         print(output)
         self.file.write(output+'\n')
 
