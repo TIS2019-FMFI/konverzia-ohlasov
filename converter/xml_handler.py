@@ -8,7 +8,7 @@ class xml_handler:
     """Poskytuje funkcie na spracovanie roznych xml vstupov. """
 
     def __init__(self):
-        pass
+        self.typy_zapisov = ["text_number","verbose", "roman", "latin"]
 
     def parse_xml(self, xml):
         try:
@@ -91,13 +91,17 @@ class xml_handler:
         Returns: str -- nazov publikacie
         Raises: WrongXmlDataToParse -- nespravne data pre dane parsovanie """
         res = self.find_in_nested_xml(xml, 'title')
-        for i in res:
+        index=0
+        while index < len(res):
+            i=res[index]
+            index+=1
             if type(i)==list:
+                res.extend(i[1:])
                 i=i[0]
             if 'title_proper' in nested_lookup('@title_type',i):
                 return " ".join(i['#text'].split())
 
-        return "n/a"
+        return None
 
     def parse_token(self, xml):
         """
@@ -148,7 +152,7 @@ class xml_handler:
             return nested_lookup("#text",tmp)[0]
         if len(self.find_in_nested_xml(xml, 'year')):
             return self.find_in_nested_xml(xml, 'year')[0]
-        return "n/a"
+        return None
 
 
     def parse_authors_ids(self, xml):
@@ -178,7 +182,9 @@ class xml_handler:
                 last_name=last_name[0]
             else:
                 last_name=""
-        return first_name + " " + last_name
+        if last_name=="" or first_name=="":
+            return None
+        return last_name + "," +first_name
 
     def parse_source_id(self, xml):
         """  :param xml:  pre parsovanie
@@ -196,7 +202,16 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                      :return:  str -- strana
                                        """
-        return self.find_in_nested_xml(xml, 'page')[0]
+        res = self.delist(self.find_in_nested_xml(xml, 'cross_biblio_biblio'))
+        for i in res:
+            i = self.delist(i)
+            if "@source" in i:
+                pom=nested_lookup("number_from",i)
+                if len(pom):
+                    for typ in self.typy_zapisov:
+                        if len(nested_lookup(typ,pom)):
+                            return  nested_lookup(typ,pom)[0]
+        return None
 
     def parse_databeses_ids(self, xml):
         """  :param xml:  pre parsovanie
@@ -214,7 +229,7 @@ class xml_handler:
         """  :param xml:  pre parsovanie
                             :return:  str -- nazov databazy
                                               """
-        other=""
+        other={"nazov":None, "je_short":False}
         tmp=self.delist(self.find_in_nested_xml(xml, 'name'))
         if type(tmp)!=list:
             tmp=[tmp]
@@ -223,9 +238,10 @@ class xml_handler:
             if type(i)!=list:
                 i=[i]
             if "short_name" in i[0]["@name_type"]:
-                return i[0]["#text"]
-            if other !="":
-                other=i[0]["#text"]
+                return {"nazov":i[0]["#text"], "je_short":True}
+            if other['nazov'] is None:
+                other['nazov']=i[0]["#text"]
+                other['typ']=i[0]["@name_type"]
         return other
 
     def parse_publisher_id(self, xml):
@@ -251,23 +267,40 @@ class xml_handler:
         for i in res:
             i = self.delist(i)
             if "@source" in i:
-                rocnik=""
-                if len(nested_lookup("latin",nested_lookup("volume",i))):
-                    rocnik=nested_lookup("latin",nested_lookup("volume",i))[0]
-                rok=""
+                rocnik=None
+                for typ in self.typy_zapisov:
+                    if len(nested_lookup(typ, nested_lookup("volume", i))):
+                        rocnik = nested_lookup(typ, nested_lookup("volume", i))[0]
+                        break
+
+                rok=None
                 if len(nested_lookup("year",nested_lookup("date",i))):
                    rok=nested_lookup("year",nested_lookup("date",i))[0]
-                cislo=""
-                if len(nested_lookup("latin",nested_lookup("issue",i))):
-                   rok=nested_lookup("latin",nested_lookup("issue",i))[0]
 
-        return ""+rocnik+", "+cislo+","+rok
+                cislo=None
+                for typ in self.typy_zapisov:
+                    if len(nested_lookup(typ,nested_lookup("issue",i))):
+                        cislo=nested_lookup(typ,nested_lookup("issue",i))[0]
+
+        return {"rocnik":rocnik,"rok":rok, "cislo":cislo}
 
     def parse_type(self,xml):
         akt=self.find_in_nested_xml(xml, '@form_type')
         if len(akt):
             return akt[0]
         return None
+
+    def parse_location(self,xml):
+        for i in self.find_in_nested_xml(xml, 'cross_biblio_institution'):
+            if "publisher" in nested_lookup("@role_type",i):
+                return nested_lookup("town",i)[0]
+        return None
+    def parse_published_year(self,xml):
+        for i in self.find_in_nested_xml(xml, 'biblio_year'):
+            if "published" in nested_lookup("@type",i):
+                return nested_lookup("year",i)[0]['#text']
+        return None
+
 
     def delist(self,x):
         while type(x)==list and len(x)==1:

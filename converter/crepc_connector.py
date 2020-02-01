@@ -23,8 +23,8 @@ class crepc_connector:
             Str -- retazec obsahujuci XML so zoznamom ohlasov
         Raises:
             CrepConnectionError -- ak sa neda pripojit
-        """        
-        url="https://app.crepc.sk/oai/citation"
+        """
+        url="https://app.crepc.sk/oai/citationX"
         params={"from":since,
         "verb":"ListRecords",
         "metadataPrefix":"xml-crepc2",
@@ -39,7 +39,7 @@ class crepc_connector:
             raise CrepConnectionError
 
     def get_references_with_token(self,token):
-        url = "https://app.crepc.sk/oai/citation"
+        url = "https://app.crepc.sk/oai/citationX"
         params = {"verb": "ListRecords",
                   "metadataPrefix": "xml-crepc2",
                   "resumptionToken": token

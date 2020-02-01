@@ -28,24 +28,29 @@ class progress_logger:
         Arguments:
             reference {reference} -- ohlas na zapisanie
         """        
-        output = "[info] Ohlas: " + reference.__str__() + "sa úspešne zapísal."
+        output = "[info] Ohlas" + reference.__str__() + "sa úspešne zapísal."
         print(output )
         self.file.write(output+'\n')
 
     def log_warning(self,msg):
-        output = "[warning] Ohlas: " +msg
+        output = "[warning] " +msg
         print(output)
         self.file.write(output + '\n')
+
     def log_error(self,error):
         """Zapise spravu o chybe pri spracovani ohlasu.
         
         Arguments:
             error {exception} -- vzniknuta chyba
         """        
-        output = "error "+error.__str__() #este nejake info
+        output = "[error] "+error.msg #este nejake info
         print(output)
         self.file.write(output+'\n')
 
+    def log_info(self,info):
+        output = "[info] " + info
+        print(output)
+        self.file.write(output + '\n')
 
     def close(self):
         """Zapise vsetky zostavajuce zmeny do suboru a zavrie ho. """

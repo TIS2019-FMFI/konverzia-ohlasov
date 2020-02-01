@@ -60,6 +60,7 @@ class references_manager:
         except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
             self.logger.log_error(e)
         finally:
+            self.logger.log_info("Konverzia ukoncena")
             self.logger.close()
             self.writer.close()
 
@@ -69,7 +70,7 @@ class references_manager:
         counter=0
         for r in ref:
             counter+=1
-            print(f'Overujem prislusnost a ziskavam data k referencii {counter} z {len(ref)}')
+            self.logger.log_info(f'Overujem prislusnost a ziskavam data k referencii {counter} z {len(ref)}. [id591={r[0]}, id035={r[1]}]')
             try:
                 akt=fact.get_reference(id035=r[1], id591=r[0], citation_cat=r[3],page=r[2])
                 if akt is not None:
