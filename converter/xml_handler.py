@@ -109,6 +109,8 @@ class xml_handler:
         :param xml:  pre parsovanie
         :return:  str -- token ak ho xml obsahuje inak None
         """
+        if not len(self.find_in_nested_xml(xml, 'oai:resumptionToken')):
+            return None
         if '#text' not in self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]:
             return None
         return self.find_in_nested_xml(xml, 'oai:resumptionToken')[0]['#text']

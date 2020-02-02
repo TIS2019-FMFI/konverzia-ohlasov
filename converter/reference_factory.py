@@ -106,7 +106,7 @@ class reference_factory:
             meno=self.handler.parse_author_name(akt)
             if meno is None:
                 raise MissingDataException(f"Nemozno ziskat cele meno autora s id{id} v ohlase s id591:{id591}.")
-            vys+="-"+meno
+            vys+=" - "+meno
         return vys[1:]
 
     def get_source(self,record,id591):
@@ -128,13 +128,13 @@ class reference_factory:
             ret+=neznamy_rocnik
         else:
             ret+=akt["rocnik"]
-
+        ret+=", "
         if akt["cislo"] is None:
             self.logger.log_warning(f"K ohlasu id591:{id591} chyba issue pouzivam {nezname_cislo}")
             ret += nezname_cislo
         else:
             ret += akt["cislo"]
-
+        ret+=", "
         if akt["rok"] is None:
             self.logger.log_warning(f"K ohlasu id591:{id591} chyba rok pouzivam {neznamy_rok}")
             ret += neznamy_rok
