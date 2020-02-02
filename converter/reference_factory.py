@@ -105,7 +105,7 @@ class reference_factory:
             akt =self.connector.get_author_for(id)
             meno=self.handler.parse_author_name(akt)
             if meno is None:
-                raise MissingDataException(f"Nemozno ziskat cele meno autora s id{akt} v ohlase s id591:{id591}.")
+                raise MissingDataException(f"Nemozno ziskat cele meno autora s id{id} v ohlase s id591:{id591}.")
             vys+="-"+meno
         return vys[1:]
 

@@ -293,7 +293,8 @@ class xml_handler:
     def parse_location(self,xml):
         for i in self.find_in_nested_xml(xml, 'cross_biblio_institution'):
             if "publisher" in nested_lookup("@role_type",i):
-                return nested_lookup("town",i)[0]
+                if len(nested_lookup("town",i)):
+                    return nested_lookup("town",i)[0]
         return None
     def parse_published_year(self,xml):
         for i in self.find_in_nested_xml(xml, 'biblio_year'):
