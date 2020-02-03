@@ -23,12 +23,13 @@ class app1_initializer:
         self.log_path = ""
         self.from_date = None
         self.to_date = datetime.today()
+        self.debug=False
         
         to = None
         fr = None
 
         try:
-            opts, args = getopt.getopt(params,"hf:t:",["help","from=","to=","log-file=","out-file=","log-path=","out-path="])
+            opts, args = getopt.getopt(params,"hf:t:d",["debug","help","from=","to=","log-file=","out-file=","log-path=","out-path="])
         except getopt.GetoptError as err:
            print(err.msg)
            print("Pre viac informacii napiste 'python app1_initializer --help'")
@@ -37,6 +38,8 @@ class app1_initializer:
             if opt in ("-h", "--help"):
                 self.usage()
                 sys.exit(0)
+            elif opt in ("-d","--debug"):
+                self.debug=True
             elif opt in ("-f", "--from"):
                 fr = arg
             elif opt in ("-t", "--to"):
@@ -92,6 +95,7 @@ class app1_initializer:
         print("  --log-file=<file>        Nazov suboru do ktoreho sa vypisuje priebeh aplikacie,")
         print("                           default nazov je 'log'. V pripade ze subor neexistuje, vytvori sa novy")
         print("  --log-path=<path>        Cesta k log suboru default je ./output/")
+        print("  -d, --debug              Spustenie debug modu aby sa vypisovalo aj info a warningy")
 
 
     def run_app(self):
@@ -100,7 +104,7 @@ class app1_initializer:
         nasledne aj instanciu references_manager na ktorej zavola
         pozadovanu metodu.
         """
-        logger=progress_logger(output_file_name=self.log_file,output_file_path=self.log_path)
+        logger=progress_logger(output_file_name=self.log_file,output_file_path=self.log_path,debug=self.debug)
         writer= file_writer(name=self.output_file,path=self.output_path)
         manager=references_manager(self,logger,writer)
         manager.get_references()
@@ -108,3 +112,4 @@ class app1_initializer:
 
 if __name__ == "__main__":
     x =  app1_initializer(sys.argv[1:])
+    x=input("pre pokracovanie stlacte enter")

@@ -25,6 +25,7 @@ class references_manager:
         self.writer = writer
         self.connector = crepc_connector()
         self.handler = xml_handler()
+        self.counter_zapisanych = 0
 
     def get_references(self):
         """Do writeru zadanom pri inicializacii
@@ -55,12 +56,13 @@ class references_manager:
                     self.writer.write_record(zoskupene_referencie[r],field035=r )
                     for j in zoskupene_referencie[r]:
                         self.logger.log_step(j)
+            self.logger.log_status(f"Zapisalo sa {self.counter_zapisanych} ohlasov.")
 
 
         except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
             self.logger.log_error(e)
         finally:
-            self.logger.log_info("Konverzia ukoncena")
+            self.logger.log_info(f"Konverzia ukoncena")
             self.logger.close()
             self.writer.close()
 
@@ -68,6 +70,7 @@ class references_manager:
         ret = set()
         fact=reference_factory(self.logger)
         counter=0
+
         for r in ref:
             counter+=1
             self.logger.log_info(f'Overujem prislusnost a ziskavam data k referencii {counter} z {len(ref)}. [id591={r[0]}, id035={r[1]}]')
@@ -75,6 +78,7 @@ class references_manager:
                 akt=fact.get_reference(id035=r[1], id591=r[0], citation_cat=r[3],page=r[2])
                 if akt is not None:
                     ret.add(akt)
+                    self.counter_zapisanych+=1
             except (CrepConnectionError, WrongXmlDataToParse, MissingDataException) as e:
                 self.logger.log_error(e)
         return ret
