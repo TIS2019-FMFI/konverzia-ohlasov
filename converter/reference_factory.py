@@ -55,7 +55,13 @@ class reference_factory:
             data['p']=self.get_source(record591,id591)
             #ak je to v casopise treba este roc...
             if typ in ['formClanok_conf.xml']:
-                data['p']=data['p']+", "+self.get_source_additional(record591,id591)
+                data['p']=data['p']+self.get_source_additional(record591,id591)
+        doi=self.get_doi(record591)
+        if doi is not None:
+            if 'p' in data:
+                data['p']+=", "+doi
+            else:
+                data['p']=doi
 
         #nastavenie \r monografia a zbornik priamo
         if typ in ['formMonografia_conf.xml', 'formZbornik_conf.xml']:
@@ -66,7 +72,19 @@ class reference_factory:
 
         #clanok a prispevok ma aj stranu \s
         if typ in ['formClanok_conf.xml', 'formPrispevokZbornik_conf.xml']:
-           data['s']=self.get_page(record591,id591)
+            strana=self.get_page(record591)
+            range_spec=self.get_page_range_spec(record591)
+            if strana is None and range_spec is None and doi is None:
+                self.logger.log_warning(f"Ohlas id591:{id591} nema ani doi, ani range_specification ani strany pouzivam [Nestr.]")
+
+            if strana is None:
+                data['s']='[Nestr.]'
+            else:
+                data['s']=strana
+            if range_spec is not None and strana is not None:
+                data['s']+=", "+range_spec
+            if range_spec is not  None and strana is None:
+                data['s']=range_spec
 
         #ziskanie databazy
         if citation_cat in ["01","02"]:
@@ -99,14 +117,20 @@ class reference_factory:
         at=self.handler.parse_authors_ids(record)
         vys=""
         if len(at)==0:
-            self.logger.log_warning(f"Ohlas id:{id591} nema autora pouzivam 'Anon'.")
-            return "Anon"
+            self.logger.log_warning(f"Ohlas id:{id591} nema autora pouzivam '[Anon]'.")
+            return "[Anon]"
         for id in at:
             akt =self.connector.get_author_for(id)
             meno=self.handler.parse_author_name(akt)
-            if meno is None:
+            if meno['priezvisko'] is None:
                 raise MissingDataException(f"Nemozno ziskat cele meno autora s id{id} v ohlase s id591:{id591}.")
-            vys+=" - "+meno
+            cele=""
+            if meno['meno'] is not None:
+                cele+=meno['meno']+', '
+            else:
+                self.logger.log_warning(f"Autor id {id} nema zadane krstne meno v ohlase s id591{id591}")
+            cele+= meno['priezvisko']
+            vys+=" - "+cele
         return vys[1:]
 
     def get_source(self,record,id591):
@@ -120,26 +144,12 @@ class reference_factory:
     def get_source_additional(self,record,id591):
         akt=self.handler.parse_source_additional(record)
         ret=""
-        neznamy_rocnik="[N.?]"
-        neznamy_rok="[N.a]"
-        nezname_cislo="[N.?]"
-        if akt["rocnik"] is None:
-            self.logger.log_warning(f"K ohlasu id591:{id591} chyba volume pouzivam {neznamy_rocnik}")
-            ret+=neznamy_rocnik
-        else:
-            ret+=akt["rocnik"]
-        ret+=", "
-        if akt["cislo"] is None:
-            self.logger.log_warning(f"K ohlasu id591:{id591} chyba issue pouzivam {nezname_cislo}")
-            ret += nezname_cislo
-        else:
-            ret += akt["cislo"]
-        ret+=", "
-        if akt["rok"] is None:
-            self.logger.log_warning(f"K ohlasu id591:{id591} chyba rok pouzivam {neznamy_rok}")
-            ret += neznamy_rok
-        else:
-            ret += akt["rok"]
+        if akt["rocnik"] is not None:
+            ret+=", "+akt["rocnik"]
+        if akt["cislo"] is not None:
+            ret +=", " + akt["cislo"]
+        if akt["rok"] is not None:
+            ret +=", "+  akt["rok"]
         return ret
 
 
@@ -150,8 +160,12 @@ class reference_factory:
         rok=self.handler.parse_published_year(record)
         if  id is not None:
             publisher= self.handler.parse_institution_name(self.connector.get_institution(id))
-        if publisher is None or miesto is None or rok is None:
-            raise MissingDataException(f"Pre ohlas id591:{id591} nemozno ziskat vydavatelske udaje.")
+        if publisher is None:
+            self.logger.log_warning(f"Ohlas id591:{id591} nema vydavatela pouzivam [s.n.]")
+        if miesto is None :
+            self.logger.log_warning(f"Ohlas id591:{id591} nema miesto vydanie pouzivam [S.l.]")
+        if rok is None:
+            self.logger.log_warning(f"Ohlas id591:{id591} nema rok vydania pouzivam [s.a.]")
         return miesto+" : "+publisher+", "+rok
 
     def get_database(self,record,id591):
@@ -172,11 +186,20 @@ class reference_factory:
             if self.test_institution_affiliation(i):
                 return True
         return False
-    def get_page(self,record,id591):
-        akt=self.handler.parse_page(record)
-        if akt is None:
-            raise MissingDataException(f"K ohlasu id591:{id591} nemozno najst stranu.")
-        return akt
+    def get_page(self,record):
+        od=self.handler.parse_page(record)
+        do=self.handler.parse_page_to(record)
+        if od is None:
+            return None
+        if do is not None:
+            od+=" - " + do
+        return od
+
+    def get_page_range_spec(self,record):
+        return self.handler.parse_page_range_spec(record)
+
+    def get_doi(self,record):
+        return self.handler.parse_doi(record)
 
     def test_institution_affiliation(self,id):
         if id in self.known_inst:

@@ -32,11 +32,8 @@ class crepc_connector:
         }
         if to:
             params["until"]=to
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
 
     def get_references_with_token(self,token):
         url = "https://app.crepc.sk/oai/citationX"
@@ -44,11 +41,8 @@ class crepc_connector:
                   "metadataPrefix": "xml-crepc2",
                   "resumptionToken": token
                   }
-        try:
-            r = requests.get(url=url, params=params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url=url, params=params)
+        return r.content.decode("utf-8")
 
 
     def get_author_for(self, id):
@@ -66,11 +60,8 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:person/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
         
     
     def get_database_for(self, id):
@@ -88,12 +79,9 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:database/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
-    
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
+
     def get_source_for(self,id):
         """" 
         Ziska cely nazov zdroja pre zadane id.      
@@ -109,11 +97,8 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:biblio/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
     
     def get_full_name_for(self,id):
         """" 
@@ -130,11 +115,8 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:biblio/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
 
 
     def get_biblio(self,id):
@@ -151,11 +133,8 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:biblio/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")
 
     def get_institution(self,id):
         """"
@@ -171,8 +150,5 @@ class crepc_connector:
         "metadataPrefix":"xml-crepc2",
         "identifier":"oai:crepc.sk:institution/"+id
         }
-        try:
-            r = requests.get(url = url, params = params)
-            return r.content.decode("utf-8")
-        except:
-            raise CrepConnectionError
+        r = requests.get(url = url, params = params)
+        return r.content.decode("utf-8")

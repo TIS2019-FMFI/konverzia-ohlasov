@@ -8,7 +8,7 @@ class xml_handler:
     """Poskytuje funkcie na spracovanie roznych xml vstupov. """
 
     def __init__(self):
-        self.typy_zapisov = ["text_number","verbose", "roman", "latin"]
+        self.typy_zapisov = ["text_number", "roman", "latin"]
 
     def parse_xml(self, xml):
         try:
@@ -174,19 +174,16 @@ class xml_handler:
                                """
         first_name = self.delist(self.find_in_nested_xml(xml, 'firstname'))
         last_name = self.delist(self.find_in_nested_xml(xml, 'lastname'))
-        if type(first_name)==list:
-            if len(first_name):
-                first_name=first_name[0]
-            else:
-                first_name=""
-        if type(last_name) == list:
-            if len(last_name):
-                last_name=last_name[0]
-            else:
-                last_name=""
-        if last_name=="" or first_name=="":
-            return None
-        return last_name + "," +first_name
+        ret={'meno':None, 'priezvisko':None}
+        if type(first_name)!=list:
+            first_name=[first_name]
+        if len(first_name):
+                ret['meno']=first_name[0]
+        if type(last_name) != list:
+            last_name=[last_name]
+        if len(last_name):
+                ret['priezvisko']=last_name[0]
+        return ret
 
     def parse_source_id(self, xml):
         """  :param xml:  pre parsovanie
@@ -209,6 +206,21 @@ class xml_handler:
             i = self.delist(i)
             if "@source" in i:
                 pom=nested_lookup("number_from",i)
+                if len(pom):
+                    for typ in self.typy_zapisov:
+                        if len(nested_lookup(typ,pom)):
+                            return  nested_lookup(typ,pom)[0]
+        return None
+
+    def parse_page_to(self, xml):
+        """  :param xml:  pre parsovanie
+                     :return:  str -- strana
+                                       """
+        res = self.delist(self.find_in_nested_xml(xml, 'cross_biblio_biblio'))
+        for i in res:
+            i = self.delist(i)
+            if "@source" in i:
+                pom=nested_lookup("number_to",i)
                 if len(pom):
                     for typ in self.typy_zapisov:
                         if len(nested_lookup(typ,pom)):
@@ -304,6 +316,16 @@ class xml_handler:
                 return nested_lookup("year",i)[0]['#text']
         return None
 
+    def parse_doi(self,xml):
+        for i in self.find_in_nested_xml(xml, 'digi_identifier'):
+            if ("DOI" in nested_lookup("@di_type", i)) and len(nested_lookup("digi_value", i)):
+                return nested_lookup("digi_value", i)[0]
+        return None
+    def parse_page_range_spec(self,xml):
+        for i in self.find_in_nested_xml(xml, 'range'):
+            if "range_specification" in i:
+                return i["range_specification"]
+        return None
 
     def delist(self,x):
         while type(x)==list and len(x)==1:
