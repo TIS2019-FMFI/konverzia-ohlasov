@@ -80,9 +80,9 @@ class app1_initializer:
 
 
     def usage(self):
-        print("Usage: python app1_initializer -f DDMMYYYY [-h | --help] [-t <date> | --to=<date> ]")
-        print("                               [--out-file=<file>] [--out-path=<path>]")
-        print("                               [--log-file=<file>] [--log-path=<path>]")
+        print("Usage: ./startup.sh -f DDMMYYYY [-h | --help] [-t <date> | --to=<date> ]")
+        print("                           [--out-file=<file>] [--out-path=<path>]")
+        print("                           [--log-file=<file>] [--log-path=<path>]")
         print()
         print("Povinny argument:") 
         print("  -f <date>, --from=<date> Datum od ktoreho ziskava ohlasy, date musi byt vo formate DDMMYYYY")
@@ -91,10 +91,10 @@ class app1_initializer:
         print("                           default je dnesny datum")
         print("  --out-file=<file>        Nazov suboru do ktoreho sa uklada vystup,")
         print("                           default nazov je 'output'. V pripade ze subor neexistuje, vytvori sa novy")
-        print("  --out-path=<path>        Cesta k vystupnemu suboru, defaultna cesta je ./output/")
+        print("  --out-path=<path>        Cesta k vystupnemu suboru, default je priecinok odkial sa aplikacia spusta ")
         print("  --log-file=<file>        Nazov suboru do ktoreho sa vypisuje priebeh aplikacie,")
         print("                           default nazov je 'log'. V pripade ze subor neexistuje, vytvori sa novy")
-        print("  --log-path=<path>        Cesta k log suboru default je ./output/")
+        print("  --log-path=<path>        Cesta k log suboru, default je priecinok odkial sa aplikacia spusta")
         print("  -d, --debug              Spustenie debug modu aby sa vypisovalo aj info a warningy")
 
 
