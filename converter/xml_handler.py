@@ -232,7 +232,9 @@ class xml_handler:
              :return:  [str] -- idcka databaz
                                               """
         ids = []
-        databases = self.find_in_nested_xml(xml, 'cross_biblio_database')
+        databases = self.delist(self.find_in_nested_xml(xml, 'cross_biblio_database'))
+        if type(databases)!=list:
+            databases=[databases]
         for db in databases:
             if type(db)==list:
                 db=db[0]
